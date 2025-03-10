@@ -5,7 +5,13 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(cors());
+//CORS configuration
+const corsOptions = {
+  origin: 'https://finance-tracker-jafx.vercel.app/',
+  optionsSuccessStatus: 200, 
+};
+
+app.use(cors(corsOptions)); 
 app.use(bodyParser.json());
 
 const uri = process.env.MONGO_URI;
