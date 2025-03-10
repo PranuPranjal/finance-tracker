@@ -10,7 +10,7 @@ function App() {
 
   //fetch list of transactions
   useEffect(() => {
-    fetch('https://finance-tracker-phi-six.vercel.app/transactions')
+    fetch('https://finance-tracker-ecru-nine.vercel.app/transactions')
       .then((res) => res.json())
       .then((data) => setTransactions(data))
       .catch((error) => console.error('Error fetching transactions:', error));
@@ -18,7 +18,7 @@ function App() {
 
   //adds a new transation
   const addTransaction = (transaction) => {
-    fetch('https://finance-tracker-phi-six.vercel.app/transactions', {
+    fetch('https://finance-tracker-ecru-nine.vercel.app/transactions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ function App() {
 
   //delets an existing transaction
   const deleteTransaction = (id) => {
-    fetch(`https://finance-tracker-phi-six.vercel.app/transactions/${id}`, {
+    fetch(`https://finance-tracker-ecru-nine.vercel.app/transactions/${id}`, {
       method: 'DELETE',
     })
       .then(() => {
@@ -45,7 +45,7 @@ function App() {
 
   //edits an existing transaction
   const editTransaction = (id, updatedTransaction) => {
-    fetch(`https://finance-tracker-phi-six.vercel.app/transactions/${id}`, {
+    fetch(`https://finance-tracker-ecru-nine.vercel.app/transactions/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
