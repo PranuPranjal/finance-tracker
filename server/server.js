@@ -8,11 +8,13 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-//connects to mongoDB
-mongoose.connect('mongodb://localhost:27017/finance', {
+const uri = process.env.MONGO_URI;
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+})
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch((err) => console.error('Error connecting to MongoDB', err));
 
 const transactionSchema = new mongoose.Schema({
   description: String,
@@ -22,35 +24,47 @@ const transactionSchema = new mongoose.Schema({
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
 
-//Routes
-app.get('/transactions', async (req, res) => {
-  const transactions = await Transaction.find();
-  res.json(transactions);
+app.get('/api/transactions', async (req, res) => {
+  try {
+    const transactions = await Transaction.find();
+    res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch transactions' });
+  }
 });
 
-//add a new transaction
-app.post('/transactions', async (req, res) => {
+app.post('/api/transactions', async (req, res) => {
   const { description, amount, date } = req.body;
-  const transaction = new Transaction({ description, amount, date });
-  await transaction.save();
-  res.json(transaction);
+  try {
+    const transaction = new Transaction({ description, amount, date });
+    await transaction.save();
+    res.json(transaction);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add transaction' });
+  }
 });
 
-//update an existing transaction
-app.put('/transactions/:id', async (req, res) => {
-    const { description, amount, date } = req.body;
+app.put('/api/transactions/:id', async (req, res) => {
+  const { description, amount, date } = req.body;
+  try {
     const transaction = await Transaction.findByIdAndUpdate(
       req.params.id,
       { description, amount, date },
       { new: true }
     );
     res.json(transaction);
-  });
-
-//delete transaction
-app.delete('/transactions/:id', async (req, res) => {
-  await Transaction.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Transaction deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update transaction' });
+  }
 });
 
-app.listen(5000, () => console.log('Server running on port 5000'));
+app.delete('/api/transactions/:id', async (req, res) => {
+  try {
+    await Transaction.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Transaction deleted' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete transaction' });
+  }
+});
+
+module.exports = app;
