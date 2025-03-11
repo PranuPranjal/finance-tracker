@@ -8,8 +8,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// const uri = process.env.MONGO_URI;
-const uri = "mongodb+srv://pranupranjal850:dnb5KzQNcSbydCVi@cluster0.p2z3c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGO_URI || "mongodb+srv://pranupranjal850:dnb5KzQNcSbydCVi@cluster0.p2z3c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -69,3 +69,4 @@ app.delete('/api/transactions/:id', async (req, res) => {
 });
 
 module.exports = app;
+export default app;
